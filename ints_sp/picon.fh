@@ -1,0 +1,6 @@
+c
+c $Id$
+c
+      double precision pito52, pidiv4, root3, root5
+      common /picon/ pito52,pidiv4,root3,root5
+c

@@ -1,0 +1,9 @@
+c
+c $Id$
+c
+c     auxvar ... something to do with sp incomplete gamma function ?
+c     var ?
+c
+      double precision auxvar, var
+      common /auxvar/ auxvar,var(2)
+c
