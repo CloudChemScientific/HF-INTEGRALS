@@ -1,44 +1,33 @@
 # $Id$
 
-    OBJ          = 
-    OBJ_OPTIMIZE = hf3PEabc.o hf3mkr.o hf3pot.o \
-                   defNxyz.o getNxyz.o matchNxyz.o hf1.o hf1mke3.o \
-                   hf1mkr.o hf1set3.o hf2.o hf2mkr.o \
-                   hf2oi.o hf3OIs.o hfabc.o hfctr3.o \
-                   hferi.o hferi_gen.o hfkei.o hfmke.o hfmkr.o \
-                   hfnai.o hfset.o igamma.o hf_print.o \
-                   hfreord_pq.o hf1_tran.o hf1_er.o hfnai_er.o case_impl.o
-
-  USES_BLAS = hf2oi.f hfkei.f hfnai.f hfnai_er.F hf2.F igamma.F hferi.F hf1.F hf1mke3.f
-
-  LIB_TARGETS = showxyz showxyz.o int_order.o int_order
-  LIBRARY = libnwints.a
-
-  HEADERS= sh_order.fh case.fh
-
-include ../../config/makefile.h
-include ../../config/makelib.h
-
-BIN_OTHER =	${BINDIR}/showxyz	${BINDIR}/int_order
-bins:	$(BIN_OTHER)
+    HEADERS = api/int_tim.fh api/apiP.fh api/int_nbf.fh auxil/spcartP.fh hondo/hnd_whermt.fh hondo/hnd_rys.fh hondo/hnd_tol.fh ../property/prop.fh
+    LIBRARY = libnwints.a
+    SUBDIRS = simint api int auxil ints_sp deriv texas ecp hondo rel dk
+    OBJ = intgrl_input.o
+  USE_TEXAS = YEP
+export USE_TEXAS
 
 
-write:
-	f77 -g -Nl99   -c hferi.w.f -o hferi.o
+include ../config/makefile.h
+include ../config/makelib.h
+
+
+txs:
+	@touch api/cando_sp.F texas/texas_stubs.F api/int_2e2c.F api/int_2e3c.F
+	$(MAKE) "USE_TEXAS=YEP"
+fix:
+	@(cd texas; $(MAKE) "USE_TEXAS=YEP" removeobj)
+	@touch api/cando_sp.F texas/*.F texas/*.f
 	$(MAKE)
-	(cd ../..;make link)
+nolib:
+	rm -i $(LIBRARY_PATH)
 
-showxyz ${BINDIR}/showxyz:	showxyz.o
-	$(FC) $(FFLAGS) $(LDFLAGS) -o ${BINDIR}/showxyz showxyz.o $(LIBS)
-	rm -f showxyz.o
-int_order ${BINDIR}/int_order:	int_order.o
-	$(FC) $(FFLAGS) $(LDFLAGS) -o ${BINDIR}/int_order int_order.o $(LIBS) -lga -lutil
-	rm -f int_order.o
-int_order.o:	int_order.F	int_order.fh
+tasks tasks.ps:	tasks.tex
+	latex tasks
+	latex tasks
+	dvips tasks -o
+	rm -f tasks.aux tasks.dvi tasks.log
 
-doc:	3ctrpot.tex
-	latex 3ctrpot
-	latex 3ctrpot
-	dvips 3ctrpot -o
-	ghostview 3ctrpot.ps
+view tasks.v:	tasks.ps
+	ghostview tasks.ps
 

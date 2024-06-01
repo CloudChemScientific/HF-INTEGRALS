@@ -1,0 +1,93 @@
+Steps for using Simint in NWChem
+
+1. Generate Simint library and enable NWChem interface
+
+Define env. variables
+USE_SIMINT=y (mandatory)
+SIMINT_MAXAM="Maximum angular momentum" (optional, default is 3, therefore up to f orbitals)
+
+cd $NWCHEM_TOP/src/NWints/
+make clean
+make
+cd ..
+make link
+
+2. Modify input file
+
+To get Simint integrals to be used in NWChem runs, add the following directives to the input file
+
+set int:cando_txs f
+set int:cando_nw f
+
+
+==========OLD CONTENT (TO BE REMOVED) ====
+1. Generate Simint library from Simint generator
+
+https://github.com/simint-chem/simint-generator
+
+2. Compile Simint library
+
+This example uses avx instructions
+
+mkdir build
+cd build
+FC=ifort CC=icc CXX=icpc  cmake -DSIMINT_VECTOR=avx -DCMAKE_INSTALL_LIBDIR=lib -DENABLE_FORTRAN=ON \
+-DSIMINT_MAXAM=7 SIMINT_MAXDER=1  -DCMAKE_Fortran_FLAGS=-i8 \
+-DCMAKE_INSTALL_PREFIX=/home/edo/apps/simint8.install ../
+
+3. Compile Simint interface in NWChem
+
+Define env. variables
+SIMINT_HOME=/home/edo/apps/simint8.install/
+USE_SIMINT=y
+
+cd $NWCHEM_TOP/src/NWints/simit
+make clean
+make
+cd ../..
+make link
+
+4. Modify input file
+
+To get Simint integrals to be used in NWChem runs, add the following directives to the input file
+
+set int:cando_txs f
+set int:cando_nw f
+
+Random thoughts for now on how to get Simint working in NWChem ...
+
+wget http://bennyp.org/research/simint/download/simint-v0.8.tar.bz2
+
+  FC=ifort CC=icc CXX=icpc ~/apps/bin/cmake -DSIMINT_VECTOR=avx ../
+  FC=ifort CC=icc CXX=icpc ~/apps/bin/ccmake -DSIMINT_VECTOR=avx ../
+ 
+ Compilation on KNL based system
+ FC=ifort CC=icc CXX=icpc ~/apps/bin/cmake 
+ -DCMAKE_BUILD_TYPE=Release \
+-DSIMINT_VECTOR=micavx512 -DCMAKE_INSTALL_LIBDIR=lib -DENABLE_FORTRAN=ON \
+ -DSIMINT_MAXAM=7 -DCMAKE_Fortran_FLAGS=-i8 \
+ -DCMAKE_INSTALL_PREFIX=/home/edo/apps/simint8.install ../
+
+ Compilation with non standard gcc g++ and 1st derivative
+ FC=ifort CC=icc CXX=icpc ~/apps/bin/cmake \
+ -DCMAKE_BUILD_TYPE=Release -DSIMINT_VECTOR=avx  \
+ -DCMAKE_INSTALL_LIBDIR=lib -DENABLE_FORTRAN=ON -DSIMINT_MAXAM=7 SIMINT_MAXDER=1 \
+ -DCMAKE_CXX_FLAGS:STRING=-gcc-name=gcc-5 -DCMAKE_CXX_FLAGS:STRING=-gxx-name=g++-5 \
+ -DCMAKE_Fortran_FLAGS=-i8 -DCMAKE_INSTALL_PREFIX=/home/edo/apps/simint8edo.install ../
+
+
+
+cmake build using ifort
+
+CMAKE
+CMAKE_BUILD_TYPE:STRING=Release
+CMAKE_CXX_FLAGS:STRING=-gxx-name=g++-5
+CMAKE_C_FLAGS:STRING=-gcc-name=gcc-5
+CMAKE_Fortran_FLAGS:STRING=-i8
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=/home/edo/apps/simint8.install
+//Maximum AM to use
+SIMINT_MAXAM:STRING=2
+//Maximum derivative level
+SIMINT_MAXDER:STRING=0
+
+
