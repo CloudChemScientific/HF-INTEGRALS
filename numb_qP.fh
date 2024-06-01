@@ -1,0 +1,8 @@
+c
+* $Id$
+c
+      logical more_ints_txs, txs_b2e4c
+      integer num_q_start, num_q_last, nsp
+      common /c_intb/ num_q_start, num_q_last, nsp,
+     &    more_ints_txs, txs_b2e4c
+c
