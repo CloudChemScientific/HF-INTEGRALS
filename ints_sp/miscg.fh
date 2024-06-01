@@ -1,0 +1,13 @@
+c
+c $Id$
+c
+c     tolone = 
+c     mab = 
+c     mcd = 
+c     ngangb = product of ab (ij) contraction levels
+c     onorm = 
+c
+      double precision tolone
+      integer mab, mcd, ngangb
+      logical onorm
+      common /miscg/ mab,mcd,ngangb,onorm,tolone

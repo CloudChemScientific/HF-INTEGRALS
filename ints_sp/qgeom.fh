@@ -1,0 +1,6 @@
+c
+c $Id$
+c
+      double precision acx, acy, acz, acy2, cosg, sing
+      common /qgeom/ acx,acy,acz,acy2,cosg,sing
+c
